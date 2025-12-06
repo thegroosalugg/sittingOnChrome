@@ -24,16 +24,18 @@ function deleteSearches() {
 
 // Keep history capped at ${limit} entries (Only returns results in each 24 hours)
 function capHistory() {
-  chrome.history.search({ text: "", maxResults: 0 }, (allResults) => {
-    const limit = 50;
-    console.log(`History: ${allResults.length}, Limit: ${limit}`);
+  chrome.storage.local.get(["historyLimit"], ({ historyLimit }) => {
+    const limit = historyLimit || 0; // 0 = unlimited
 
-    if (allResults.length < limit) return;
-    // Newest entries are at index 0; delete everything after the limit
-    const toDelete = allResults.slice(limit);
-    toDelete.forEach((page) => {
-      chrome.history.deleteUrl({ url: page.url });
-      console.log(`Purging history: ${page.url}`);
+    chrome.history.search({ text: "", maxResults: 0 }, (allResults) => {
+      console.log(`History: ${allResults.length}, Limit: ${limit}`);
+      if (limit === 0 || allResults.length <= limit) return;
+
+      const toDelete = allResults.slice(limit);
+      toDelete.forEach((page) => {
+        chrome.history.deleteUrl({ url: page.url });
+        console.log(`Purging history: ${page.url}`);
+      });
     });
   });
 }
