@@ -46,12 +46,36 @@ const iconsContainer = document.getElementById("search-icons");
 const icons = ["google", "bing", "duckduckgo", "yahoo", "yandex"];
 
 // dynamically loads SVG icons from /icons directory
-iconsContainer.querySelectorAll("div[data-icon]").forEach(async (el) => {
-  const iconName = el.getAttribute("data-icon");
-  if (!icons.includes(iconName)) return; // only proceed for approved icons
+// 1. fetch active filters once
+chrome.storage.local.get("activeFilters", ({ activeFilters = [] }) => {
+  console.log("Active Search Filters", activeFilters);
+  // 2. loop through icons
+  iconsContainer.querySelectorAll("div[data-icon]").forEach(async (el) => {
+    const iconName = el.getAttribute("data-icon");
+    if (!icons.includes(iconName)) return; // early return for non approved icons
 
-  const response = await fetch(`icons/${iconName}.svg`);
-  const svgText = await response.text();
-  el.innerHTML = svgText;
-  el.querySelector("svg").classList.add("icon"); // Add a class for styling
+    const response = await fetch(`icons/${iconName}.svg`); // load icon.svg from /icons directory
+    const svgText = await response.text(); // convert to text
+    el.innerHTML = svgText; // set inner HTML as SVG content
+
+    const svg = el.querySelector("svg"); // get SVG element fron inside <div data-icon>
+    if (!svg) return;
+    svg.classList.add("icon"); // add class for general styling
+
+    // 3. apply active class if present in storage
+    if (activeFilters.includes(iconName)) svg.classList.add("active");
+
+    // 4. click handler for toggling & updating storage
+    el.addEventListener("click", () => {
+      svg.classList.toggle("active");
+
+      if (svg.classList.contains("active")) {
+        if (!activeFilters.includes(iconName)) activeFilters.push(iconName);
+      } else {
+        activeFilters = activeFilters.filter(name => name !== iconName);
+      }
+
+      chrome.storage.local.set({ activeFilters }); // save to storage
+    });
+  });
 });
