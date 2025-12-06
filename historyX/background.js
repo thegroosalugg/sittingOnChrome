@@ -1,12 +1,19 @@
-// delete history older than ${range}
-const now = Date.now();
-const range = 3;
-const endTime = now - range * 24 * 60 * 60 * 1000;
+function deleteHistoryRange() {
+  chrome.storage.local.get(["historyRange"], ({ historyRange }) => {
+    const range = historyRange || 0; // 0 = unlimited
+    if (range <= 0) return;
+
+    const now = Date.now();
+    const endTime = now - range * 24 * 60 * 60 * 1000;
+
+    chrome.history.deleteRange({ startTime: 0, endTime }, () => {
+      console.log(`Deleted all history older than ${range} days`);
+    });
+  });
+}
 
 // executes once on browser launch
-chrome.history.deleteRange({ startTime: 0, endTime }, () => {
-  console.log(`Deleted all history older than ${range} days`);
-});
+deleteHistoryRange();
 
 // remove search engine search results from history
 function deleteSearches() {
@@ -29,7 +36,7 @@ function capHistory() {
 
     chrome.history.search({ text: "", maxResults: 0 }, (allResults) => {
       console.log(`History: ${allResults.length}, Limit: ${limit}`);
-      if (limit === 0 || allResults.length <= limit) return;
+      if (limit <= 0 || allResults.length <= limit) return;
 
       const toDelete = allResults.slice(limit);
       toDelete.forEach((page) => {

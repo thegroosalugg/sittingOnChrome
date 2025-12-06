@@ -1,19 +1,33 @@
-// get HTML <input> for use ${limit}
+function getFromStorage(id, element) {
+  chrome.storage.local.get(id, (data) => {
+    const value = data[id];
+    if (typeof value === "number") {
+      element.value = value;
+    } else {
+      element.value = 0; // 0 = unlimited
+    }
+  });
+}
+
+function saveToStorage(id, element) {
+  const value = parseInt(element.value, 10);
+  const sanitizedValue = isNaN(value) ? 0 : value;
+
+  chrome.storage.local.set({ [id]: sanitizedValue }, () => {
+    console.log(`Saved history ${id}: ${sanitizedValue}`);
+  });
+}
+
+const rangeInput = document.getElementById("range");
 const limitInput = document.getElementById("limit");
 
-// Load saved limit on popup open
-chrome.storage.local.get(["historyLimit"], ({ historyLimit }) => {
-  if (typeof historyLimit === "number") {
-    limitInput.value = historyLimit;
-  } else {
-    limitInput.value = 0; // 0 = unlimited
-  }
+getFromStorage("historyRange", rangeInput);
+getFromStorage("historyLimit", limitInput);
+
+rangeInput.addEventListener("change", () => {
+  saveToStorage("historyRange", rangeInput);
 });
 
-// Save new limit whenever user changes it
 limitInput.addEventListener("change", () => {
-  const limit = parseInt(limitInput.value, 10);
-  chrome.storage.local.set({ historyLimit: isNaN(limit) ? 0 : limit }, () => {
-    console.log(`Saved history limit: ${limitInput.value}`);
-  });
+  saveToStorage("historyLimit", limitInput);
 });

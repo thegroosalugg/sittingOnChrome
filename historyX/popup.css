@@ -21,6 +21,10 @@ a, p, h1, h2, h3, h4, h5, h6, button, label, input, textarea, select, option {
           color: inherit;
 }
 
+::-webkit-scrollbar       { width: 2px; height: 2px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #fff; border-radius: 5px; }
+
 body {
   display: flex;
   flex-direction: column;
@@ -99,11 +103,14 @@ h1 {
   position: absolute;
   inset: 0;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
+  overflow-y: scroll;
+  padding: 0.25rem;
   border-radius: var(--rounded-sm);
   border: var(--border);
   background-color: var(--gray);
+  font-size: 80%;
 
   &:hover {
     opacity: 1;

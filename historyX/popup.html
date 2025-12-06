@@ -9,10 +9,23 @@
   <body>
     <h1>History X</h1>
     <div class="control">
+      <label for="range">No. of days to retain history</label>
+      <input type="number" id="range" min="0" value="0" />
+      <div class="info-icon">i</div>
+      <div class="tool-tip">
+        How many days to store history. <br />
+        Runs once on browser launch. <br />
+        0 = Unlimited
+      </div>
+    </div>
+    <div class="control">
       <label for="limit"> Max History Entries </label>
       <input type="number" id="limit" min="0" value="0" />
       <div class="info-icon">i</div>
-      <div class="tool-tip">0 = Unlimited</div>
+      <div class="tool-tip">
+        Cap maximum history entries. <br />
+        0 = Unlimited
+      </div>
     </div>
   </body>
 </html>
