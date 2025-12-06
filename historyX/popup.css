@@ -104,7 +104,7 @@ h1 {
   border-radius: var(--rounded-sm);
   border: var(--border);
   background-color: var(--gray);
-  font-size: 80%;
+  font-size: 1rem;
 
   &:hover {
     opacity: 1;
@@ -113,9 +113,22 @@ h1 {
 }
 
 .history-filter {
+  position: relative;
   padding: 0.125rem 0.5rem 0.25rem;
   border: var(--border);
   border-radius: var(--rounded-sm);
+
+  > .info-icon {
+    position: absolute;
+    inset: 0.25rem 0.5rem auto auto;
+    width: 35px;
+  }
+
+  > .tool-tip ul {
+    text-align: left;
+    font-size: 0.875rem;
+    margin: 0.25rem auto;
+  }
 }
 
 #search-icons {
