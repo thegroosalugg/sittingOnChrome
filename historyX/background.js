@@ -16,7 +16,7 @@ function deleteHistoryRange() {
 deleteHistoryRange();
 
 // remove search engine search results from history
-function deleteSearches() {
+function historyFilter() {
   // search engines to monitor
   const searchUrls = ["google.com/search", "bing.com/search", "duckduckgo.com"];
   // Delete specific search history entries
@@ -49,6 +49,6 @@ function capHistory() {
 
 // Listen for any navigation
 chrome.webNavigation.onCommitted.addListener((details) => {
-  deleteSearches();
+  historyFilter();
   capHistory();
 });

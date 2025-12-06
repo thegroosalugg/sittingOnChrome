@@ -30,14 +30,8 @@ body {
   flex-direction: column;
   gap: 0.5rem;
   width: 300px;
-  background: linear-gradient(
-    to right,
-    #000000 0%,
-    #8b0000 50%,
-    #ff0000 75%,
-    #ff7300 100%
-  );
-  color: #ffffff;
+  background: linear-gradient(to right, #000000, #434343);
+  color: #fff;
   text-align: center;
   line-height: 1.2;
   font-size: 1.25em;
@@ -115,5 +109,26 @@ h1 {
   &:hover {
     opacity: 1;
     visibility: visible;
+  }
+}
+
+.history-filter {
+  padding: 0.125rem 0.5rem 0.25rem;
+  border: var(--border);
+  border-radius: var(--rounded-sm);
+}
+
+#search-icons {
+  display: flex;
+  justify-content: center;
+  gap: 0.25rem;
+
+  .icon {
+    width: 25px;
+    aspect-ratio: 1;
+    padding: 0.25rem;
+    border: var(--border);
+    border-radius: var(--rounded-md);
+    cursor: pointer;
   }
 }
