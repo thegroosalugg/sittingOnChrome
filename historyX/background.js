@@ -15,23 +15,39 @@ function deleteHistoryRange() {
 // executes once on browser launch
 deleteHistoryRange();
 
+// accepted search engines in the UI
+const searchEngines = {
+      google: "google.com/search",
+        bing: "bing.com/search",
+  duckduckgo: "duckduckgo.com",
+       yahoo: "search.yahoo.com/search",
+      yandex: "yandex.com/search"
+};
+
 // remove search engine search results from history
 function historyFilter() {
-  // search engines to monitor
-  const searchUrls = ["google.com/search", "bing.com/search", "duckduckgo.com"];
-  // Delete specific search history entries
-  chrome.history.search({ text: "", maxResults: 10 }, (results) => {
-    results.forEach((page) => {
-      if (searchUrls.some((sub) => page.url.includes(sub))) {
-        chrome.history.deleteUrl({ url: page.url });
-      }
+  chrome.storage.local.get("activeFilters", ({ activeFilters = [] }) => {
+    if (!activeFilters.length) return;
+
+    const searchUrls = [];
+    activeFilters.forEach((url) => {
+      if (searchEngines[url]) searchUrls.push(searchEngines[url]);
+    });
+
+    // Delete specific search history entries
+    chrome.history.search({ text: "", maxResults: 10 }, (results) => {
+      results.forEach((page) => {
+        if (searchUrls.some((sub) => page.url.includes(sub))) {
+          chrome.history.deleteUrl({ url: page.url });
+        }
+      });
     });
   });
 }
 
 // Keep history capped at ${limit} entries (Only returns results in each 24 hours)
 function capHistory() {
-  chrome.storage.local.get(["historyLimit"], ({ historyLimit }) => {
+  chrome.storage.local.get("historyLimit", ({ historyLimit }) => {
     const limit = historyLimit || 0; // 0 = unlimited
 
     chrome.history.search({ text: "", maxResults: 0 }, (allResults) => {
