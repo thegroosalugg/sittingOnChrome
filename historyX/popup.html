@@ -3,12 +3,18 @@
   <head>
     <meta charset="UTF-8" />
     <title>History X</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="popup.css" />
     <script src="popup.js" defer></script>
   </head>
   <body>
     <h1>History X</h1>
-    <div class="control">
+    <div class="control relative">
       <label for="range">No. of days to retain history</label>
       <input type="number" id="range" min="0" value="0" />
       <div class="info-icon">i</div>
@@ -18,7 +24,7 @@
         0 = Unlimited
       </div>
     </div>
-    <div class="control">
+    <div class="control relative">
       <label for="limit"> Max History Entries </label>
       <input type="number" id="limit" min="0" value="0" />
       <div class="info-icon">i</div>
@@ -40,7 +46,8 @@
           <li>yandex.com/search</li>
         </ul>
         <small>
-          Only the search page itself is removed; links you click from the search results remain in your history.
+          Only the search page itself is removed; links you click from the search results
+          remain in your history.
         </small>
       </div>
       <div id="search-icons">
@@ -49,6 +56,13 @@
         <div data-icon="duckduckgo"></div>
         <div data-icon="yahoo"></div>
         <div data-icon="yandex"></div>
+      </div>
+      <div class="control column no-border">
+        <label for="custom-url">Add custom URL</label>
+        <div class="inline-button-row">
+          <input id="custom-url" />
+          <button>✓</button>
+        </div>
       </div>
     </div>
   </body>

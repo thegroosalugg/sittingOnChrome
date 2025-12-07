@@ -29,15 +29,17 @@ function historyFilter() {
   chrome.storage.local.get("activeFilters", ({ activeFilters = [] }) => {
     if (!activeFilters.length) return;
 
-    const searchUrls = [];
+    const filteredUrls = [];
+
     activeFilters.forEach((url) => {
-      if (searchEngines[url]) searchUrls.push(searchEngines[url]);
+      const foundUrl = searchEngines[url];
+      if (foundUrl) filteredUrls.push(foundUrl);
     });
 
     // Delete specific search history entries
     chrome.history.search({ text: "", maxResults: 10 }, (results) => {
       results.forEach((page) => {
-        if (searchUrls.some((sub) => page.url.includes(sub))) {
+        if (filteredUrls.some((sub) => page.url.includes(sub))) {
           chrome.history.deleteUrl({ url: page.url });
         }
       });

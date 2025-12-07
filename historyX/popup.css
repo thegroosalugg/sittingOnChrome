@@ -1,7 +1,25 @@
 :root {
-  --gray: #585858;
-  --pearl: #dfdfdf;
-  --border: 1px solid var(--pearl);
+  --font-major: "Montserrat", serif;
+  --font-minor:  Georgia, "Times New Roman", Times, serif;
+  --stone-50:  oklch(0.985 0.001 106.423);
+  --stone-100: oklch(0.97 0.001 106.424);
+  --stone-200: oklch(0.923 0.003 48.717);
+  --stone-300: oklch(0.869 0.005 56.366);
+  --stone-400: oklch(0.709 0.01 56.259);
+  --stone-500: oklch(0.553 0.013 58.071);
+  --stone-600: oklch(0.444 0.011 73.639);
+  --stone-700: oklch(0.374 0.01 67.558);
+  --stone-800: oklch(0.268 0.007 34.298);
+  --stone-900: oklch(0.216 0.006 56.043);
+  --stone-950: oklch(0.147 0.004 49.25);
+  --lime-600:  oklch(0.648 0.2 131.684);
+  --lime-700:  oklch(0.532 0.157 131.589);
+
+  --white: var(--stone-50);
+  --black: var(--stone-950);
+  --gray:  var(--stone-500);
+
+  --border: 1px solid;
   --rounded-xs:  0.125rem;
   --rounded-sm:  0.25rem;
   --rounded-md:  0.375rem;
@@ -10,6 +28,14 @@
   --rounded-2xl: 1rem;
   --rounded-3xl: 1.5rem;
   --rounded-4xl: 2rem;
+  --text-xs:   0.75rem;
+  --text-sm:   0.875rem;
+  --text-base: 1rem;
+  --text-lg:   1.125rem;
+  --text-xl:   1.25rem;
+  --text-2xl:  1.5rem;
+  --text-3xl:  1.875rem;
+  --text-4xl:  2.25rem;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -21,66 +47,70 @@ a, p, h1, h2, h3, h4, h5, h6, button, label, input, textarea, select, option {
           color: inherit;
 }
 
+button { cursor: pointer; }
+
 ::-webkit-scrollbar       { width: 2px; height: 2px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #fff; border-radius: 5px; }
+::-webkit-scrollbar-thumb { background: var(--white); border-radius: 5px; }
+
+/* classes defined lower in order always win > important = general utility classes defined up top always win  */
+.column    { flex-direction: column   !important; }
+.relative  {       position: relative !important; }
+.no-border {         border: none     !important; }
 
 body {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
   width: 300px;
-  background: linear-gradient(to right, #000000, #434343);
-  color: #fff;
-  text-align: center;
-  line-height: 1.2;
-  font-size: 1.25em;
   padding: 0.5rem 1rem;
-  font-family: Georgia, "Times New Roman", Times, serif;
-  text-shadow: 0.5px 0.5px 1px #000;
+  background: linear-gradient(to right, var(--black), var(--stone-600));
+  color: var(--white);
+  line-height: 1.2;
+  font-family: var(--font-major);
+  font-size: var(--text-base);
+  text-align: center;
 }
 
 h1 {
-  font-size: 2rem;
+  font-size: var(--text-3xl);
   font-weight: bold;
   text-decoration-line: underline;
 }
 
 .control {
-  position: relative;
   display: flex;
-  gap: 0.375rem;
   justify-content: center;
   align-items: center;
+  gap: 0.375rem;
   padding: 0.25rem 0.5rem;
   border: var(--border);
   border-radius: var(--rounded-sm);
 
-  label {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-    font-size: 1.125rem;
-  }
+  label, input { font-size: var(--text-lg); }
+  label { flex: 1; }
 
   input {
     min-width: 0;
-    flex: 0 1 33%;
-    color: #000;
-    border-radius: var(--rounded-lg);
-    border: 1px solid #000;
+    max-width: 100%;
+    color: var(--black);
     padding: 0.25rem 0.5rem;
+    border-radius: var(--rounded-lg);
+    border: var(--border) var(--black);
+
+    &[type="number"] { flex: 0 1 33%; }
   }
 }
 
 .info-icon {
   width: 35px;
   padding: 0.25rem 0.5rem;
+  font-family: var(--font-minor);
+  font-size: var(--text-xl);
   font-weight: bold;
   border: var(--border);
-  background-color: var(--gray);
-  color: var(--pearl);
+  background-color: var(--stone-600);
+  color: var(--white);
   border-radius: var(--rounded-lg);
   cursor: pointer;
 
@@ -96,6 +126,7 @@ h1 {
   transition: opacity 0.5s ease;
   position: absolute;
   inset: 0;
+  z-index: 20;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -104,7 +135,6 @@ h1 {
   border-radius: var(--rounded-sm);
   border: var(--border);
   background-color: var(--gray);
-  font-size: 1rem;
 
   &:hover {
     opacity: 1;
@@ -118,6 +148,8 @@ h1 {
   border: var(--border);
   border-radius: var(--rounded-sm);
 
+  > h2 { font-size: var(--text-xl); }
+
   > .info-icon {
     position: absolute;
     inset: 0.5rem 0.5rem auto auto;
@@ -125,7 +157,7 @@ h1 {
 
   > .tool-tip ul {
     text-align: left;
-    font-size: 0.875rem;
+    font-size: var(--text-sm);
     margin: 0.25rem auto;
   }
 }
@@ -134,9 +166,10 @@ h1 {
   display: flex;
   justify-content: center;
   gap: 0.25rem;
+  margin-bottom: 0.5rem;
 
   .icon {
-    width: 25px;
+    width: 28px;
     aspect-ratio: 1;
     padding: 0.25rem;
     border: var(--border);
@@ -145,8 +178,30 @@ h1 {
     transition: 0.5s ease;
 
     &.active {
-      background-color: #fff;
-      color: #000;
+      background-color: var(--white);
+      color: var(--black);
     }
+  }
+}
+
+.inline-button-row {
+  display: flex;
+  max-width: 90%;
+  overflow: hidden;
+  border-radius: var(--rounded-lg);
+  border: var(--border) var(--black);
+
+  > :first-child {
+    border: none;
+    border-radius: 0;
+    outline: none;
+  }
+
+  > button {
+    padding: 0.25rem 0.5rem;
+    font-weight: 900;
+    background: var(--lime-600);
+    border: none;
+    border-left: var(--border) var(--black);
   }
 }
