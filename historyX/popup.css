@@ -156,10 +156,14 @@ input {
     inset: 0.5rem 0.5rem auto auto;
   }
 
-  > .tool-tip ul {
-    text-align: left;
-    font-size: var(--text-sm);
-    margin: 0.25rem auto;
+  > .tool-tip {
+    ul {
+      text-align: left;
+      font-size: var(--text-sm);
+      margin: 0.25rem auto;
+    }
+
+    hr { margin: 0.5rem 0; }
   }
 }
 

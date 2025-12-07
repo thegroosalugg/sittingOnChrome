@@ -26,10 +26,10 @@ const searchEngines = {
 
 // remove search engine search results from history
 function historyFilter() {
-  chrome.storage.local.get("activeFilters", ({ activeFilters = [] }) => {
-    if (!activeFilters.length) return;
+  chrome.storage.local.get(["activeFilters", "customUrls"], ({ activeFilters = [], customUrls = [] }) => {
+    if (!activeFilters.length && !customUrls.length) return;
 
-    const filteredUrls = [];
+    const filteredUrls = [...customUrls];
 
     activeFilters.forEach((url) => {
       const foundUrl = searchEngines[url];

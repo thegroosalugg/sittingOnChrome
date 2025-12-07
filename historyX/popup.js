@@ -112,7 +112,7 @@ function saveCustomUrl() {
       return;
     }
 
-    customUrls.unshift(url);
+    customUrls.push(url);
 
     chrome.storage.local.set({ customUrls }, () => {
       console.log(`Saved Custom Url ${customUrls}`);
@@ -156,7 +156,7 @@ function renderRow(url) {
 
   row.appendChild(text);
   row.appendChild(button);
-  customUrlList.appendChild(row);
+  customUrlList.insertBefore(row, customUrlList.firstChild);
 }
 
 function renderList() {
