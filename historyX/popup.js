@@ -93,11 +93,17 @@ function throttle(toggle = false) {
   throttling = toggle;
   customUrlButton.disabled = toggle; // for UI
 }
+ // transforms value by removing mistakes- returns null if invalid
+function sanitize(value) {
+  return value.trim().toLowerCase().match(/[a-z0-9\-.\/:]+/g)?.join('');
+}
 
 function saveCustomUrl() {
   if (throttling) return; // early exit
-  const url = customUrlInput.value.trim()?.toLowerCase(); // sanitize
+
+  const url = sanitize(customUrlInput.value) // sanitize
   if (!url) return; // no UI changes for empty values
+
   throttle(true); // set throttle to true and disable button
 
   chrome.storage.local.get("customUrls", ({ customUrls = [] }) => {
@@ -107,10 +113,12 @@ function saveCustomUrl() {
     }
 
     customUrls.unshift(url);
+
     chrome.storage.local.set({ customUrls }, () => {
       console.log(`Saved Custom Url ${customUrls}`);
       customUrlInput.value = ""; // reset <input> field
       renderRow(url); // add <html> to the DOM
+
       setTimeout(() => {
         throttle(); // set throttling off
       }, 1000); // 1 click per second
@@ -121,10 +129,10 @@ function saveCustomUrl() {
 function deleteCustomUrl(url) {
   chrome.storage.local.get("customUrls", ({ customUrls = [] }) => {
     const updatedUrls = customUrls.filter(value => value !== url); // remove from array then save to storage
-    
+
     chrome.storage.local.set({ customUrls: updatedUrls }, () => {
       console.log(`Delete Url ${url}`);
-      const li = document.getElementById(url);
+      const li = customUrlList.querySelector(`[data-url="${CSS.escape(url)}"]`); // gets LI by saved dataset. CSS.escapes invalid URL class characters
       li.remove(); // remove from DOM
     });
   });
@@ -134,7 +142,7 @@ function deleteCustomUrl(url) {
 function renderRow(url) {
   const row = document.createElement("li");
   row.className = "inline-button-row";
-  row.id = url;
+  row.dataset.url = url; // save to dataset instead of ID for greater character tolerance
 
   const text = document.createElement("p");
   text.textContent = url;
