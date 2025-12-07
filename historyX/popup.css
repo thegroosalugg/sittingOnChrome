@@ -75,7 +75,7 @@ h1 {
 }
 
 .info-icon {
-  flex: 0 0 35px;
+  width: 35px;
   padding: 0.25rem 0.5rem;
   font-weight: bold;
   border: var(--border);
@@ -120,8 +120,7 @@ h1 {
 
   > .info-icon {
     position: absolute;
-    inset: 0.25rem 0.5rem auto auto;
-    width: 35px;
+    inset: 0.5rem 0.5rem auto auto;
   }
 
   > .tool-tip ul {
