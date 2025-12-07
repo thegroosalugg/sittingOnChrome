@@ -82,9 +82,35 @@ chrome.storage.local.get("activeFilters", ({ activeFilters = [] }) => {
 });
 
 // *** SAVE CUSTOM USER URLS TO HISTORY FILTER
-const customUrlRow = document.getElementById("custom-url-row");
-const customUrlInput = customUrlRow.querySelector("input");
-const customUrlButton = customUrlRow.querySelector("button");
+const customUrlRow = document.getElementById("custom-url-row"); // user input container
+const customUrlInput = customUrlRow.querySelector("input"); // child of user input container
+const customUrlButton = customUrlRow.querySelector("button"); // child of user input container
+const customUrlList = document.getElementById("custom-url-list"); // user URLs output list
+
+
+function renderCustomUrls() {
+  chrome.storage.local.get("customUrls", ({ customUrls = [] }) => {
+    customUrlList.innerHTML = "";
+
+    customUrls.forEach((url) => {
+      const row = document.createElement("li");
+      row.className = "inline-button-row";
+
+      const text = document.createElement("p");
+      text.textContent = url;
+
+      const button = document.createElement("button");
+      button.textContent = "✖";
+      
+      row.appendChild(text);
+      row.appendChild(button);
+      customUrlList.appendChild(row);
+    });
+  });
+}
+
+// run on popup load
+renderCustomUrls();
 
 let throttling = false; // prevent rapid clicks
 

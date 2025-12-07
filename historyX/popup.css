@@ -14,6 +14,8 @@
   --stone-950: oklch(0.147 0.004 49.25);
   --lime-600:  oklch(0.648 0.2 131.684);
   --lime-700:  oklch(0.532 0.157 131.589);
+  --rust-500: oklch(0.66199 0.18165 36.227);
+  --rust-600: oklch(0.59307 0.14715 33.287);
 
   --white: var(--stone-50);
   --black: var(--stone-950);
@@ -53,11 +55,6 @@ button { cursor: pointer; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--white); border-radius: 5px; }
 
-/* classes defined lower in order always win > important = general utility classes defined up top always win  */
-.column    { flex-direction: column   !important; }
-.relative  {       position: relative !important; }
-.no-border {         border: none     !important; }
-
 body {
   display: flex;
   flex-direction: column;
@@ -72,46 +69,50 @@ body {
   text-align: center;
 }
 
+.box {
+  padding: 0.25rem 0.5rem;
+  border: var(--border);
+  border-radius: var(--rounded-sm);
+}
+
 h1 {
   font-size: var(--text-3xl);
   font-weight: bold;
   text-decoration-line: underline;
 }
 
-.control {
+label, input { font-size: var(--text-lg); }
+
+input {
+  min-width: 0;
+  max-width: 100%;
+  color: var(--black);
+  padding: 0.25rem 0.5rem;
+  border: var(--border);
+  border-radius: var(--rounded-lg);
+}
+
+.number-row {
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 0.375rem;
-  padding: 0.25rem 0.5rem;
-  border: var(--border);
-  border-radius: var(--rounded-sm);
 
-  label, input { font-size: var(--text-lg); }
   label { flex: 1; }
-
-  input {
-    min-width: 0;
-    max-width: 100%;
-    color: var(--black);
-    padding: 0.25rem 0.5rem;
-    border-radius: var(--rounded-lg);
-    border: var(--border) var(--black);
-
-    &[type="number"] { flex: 0 1 33%; }
-  }
+  input { flex: 0 1 33%; }
 }
 
 .info-icon {
   width: 35px;
-  padding: 0.25rem 0.5rem;
   font-family: var(--font-minor);
   font-size: var(--text-xl);
   font-weight: bold;
+  padding: 0.25rem 0.5rem;
   border: var(--border);
+  border-radius: var(--rounded-lg);
   background-color: var(--stone-600);
   color: var(--white);
-  border-radius: var(--rounded-lg);
   cursor: pointer;
 
   &:hover ~ .tool-tip {
@@ -133,7 +134,6 @@ h1 {
   overflow-y: scroll;
   padding: 0.25rem;
   border-radius: var(--rounded-sm);
-  border: var(--border);
   background-color: var(--gray);
 
   &:hover {
@@ -142,13 +142,14 @@ h1 {
   }
 }
 
-.history-filter {
+.history-filter-container {
   position: relative;
-  padding: 0.125rem 0.5rem 0.25rem;
-  border: var(--border);
-  border-radius: var(--rounded-sm);
 
-  > h2 { font-size: var(--text-xl); }
+  > h2 {
+    font-size: var(--text-xl);
+
+    &:last-of-type { margin-top: 0.5rem; }
+  }
 
   > .info-icon {
     position: absolute;
@@ -189,13 +190,14 @@ h1 {
 }
 
 .inline-button-row {
+  margin: 0 auto;
   display: flex;
   max-width: 90%;
   overflow: hidden;
   border-radius: var(--rounded-lg);
-  border: var(--border) var(--black);
 
   > :first-child {
+    flex: 1;
     border: none;
     border-radius: 0;
     outline: none;
@@ -203,13 +205,43 @@ h1 {
 
   > button {
     padding: 0.25rem 0.5rem;
-    font-weight: 900;
-    background: var(--lime-600);
     border: none;
     border-left: var(--border) var(--black);
+    font-weight: 900;
+    background: var(--lime-600);
     transition: opacity 0.5s ease;
 
     &:active { transform: scale(0.95); }
     &:disabled { opacity: 0.6; pointer-events: none; }
+  }
+}
+
+#custom-url-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  max-height: 100px;
+  overflow-y: scroll;
+  margin-bottom: 0.5rem;
+
+  > .inline-button-row {
+    flex-shrink: 0;
+    width: 90%;
+    background: var(--white);
+
+    p {
+      color: var(--black);
+      text-align: start;
+      padding: 0.25rem 0.5rem;
+      max-width: 100%;
+      text-wrap: nowrap;
+      overflow-x: scroll;
+      border-right: 0.5rem solid transparent;
+
+      &::-webkit-scrollbar-thumb { background: var(--gray); }
+    }
+
+    button { background: var(--rust-600); }
   }
 }
