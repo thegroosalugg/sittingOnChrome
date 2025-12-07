@@ -87,31 +87,6 @@ const customUrlInput = customUrlRow.querySelector("input"); // child of user inp
 const customUrlButton = customUrlRow.querySelector("button"); // child of user input container
 const customUrlList = document.getElementById("custom-url-list"); // user URLs output list
 
-
-function renderCustomUrls() {
-  chrome.storage.local.get("customUrls", ({ customUrls = [] }) => {
-    customUrlList.innerHTML = "";
-
-    customUrls.forEach((url) => {
-      const row = document.createElement("li");
-      row.className = "inline-button-row";
-
-      const text = document.createElement("p");
-      text.textContent = url;
-
-      const button = document.createElement("button");
-      button.textContent = "✖";
-      
-      row.appendChild(text);
-      row.appendChild(button);
-      customUrlList.appendChild(row);
-    });
-  });
-}
-
-// run on popup load
-renderCustomUrls();
-
 let throttling = false; // prevent rapid clicks
 
 function throttle(toggle = false) {
@@ -119,21 +94,23 @@ function throttle(toggle = false) {
   customUrlButton.disabled = toggle; // for UI
 }
 
-function handleSaveCustomUrl() {
+function saveCustomUrl() {
   if (throttling) return; // early exit
-  const value = customUrlInput.value.trim()?.toLowerCase(); // sanitize
-  if (!value) return; // no UI changes for empty values
+  const url = customUrlInput.value.trim()?.toLowerCase(); // sanitize
+  if (!url) return; // no UI changes for empty values
   throttle(true); // set throttle to true and disable button
 
   chrome.storage.local.get("customUrls", ({ customUrls = [] }) => {
-    if (customUrls.includes(value)) {
+    if (customUrls.includes(url)) {
       throttle(); // set throttling off
       return;
     }
-    customUrls.unshift(value);
+
+    customUrls.unshift(url);
     chrome.storage.local.set({ customUrls }, () => {
       console.log(`Saved Custom Url ${customUrls}`);
-      customUrlInput.value = "";
+      customUrlInput.value = ""; // reset <input> field
+      renderRow(url); // add <html> to the DOM
       setTimeout(() => {
         throttle(); // set throttling off
       }, 1000); // 1 click per second
@@ -141,6 +118,52 @@ function handleSaveCustomUrl() {
   });
 }
 
+function deleteCustomUrl(url) {
+  chrome.storage.local.get("customUrls", ({ customUrls = [] }) => {
+    const updatedUrls = customUrls.filter(value => value !== url); // remove from array then save to storage
+    
+    chrome.storage.local.set({ customUrls: updatedUrls }, () => {
+      console.log(`Delete Url ${url}`);
+      const li = document.getElementById(url);
+      li.remove(); // remove from DOM
+    });
+  });
+}
+
+// creates list item for custom URL entry
+function renderRow(url) {
+  const row = document.createElement("li");
+  row.className = "inline-button-row";
+  row.id = url;
+
+  const text = document.createElement("p");
+  text.textContent = url;
+
+  const button = document.createElement("button");
+  button.textContent = "✖";
+
+  button.addEventListener("click", () => {
+    deleteCustomUrl(url);
+  });
+
+  row.appendChild(text);
+  row.appendChild(button);
+  customUrlList.appendChild(row);
+}
+
+function renderList() {
+  chrome.storage.local.get("customUrls", ({ customUrls = [] }) => {
+    customUrlList.innerHTML = "";
+
+    customUrls.forEach((url) => {
+      renderRow(url);
+    });
+  });
+}
+
+// run on popup load
+renderList();
+
 customUrlButton.addEventListener("click", () => {
-  handleSaveCustomUrl();
+  saveCustomUrl();
 });
