@@ -50,15 +50,16 @@ const icons = ["google", "bing", "duckduckgo", "yahoo", "yandex"];
 chrome.storage.local.get("activeFilters", ({ activeFilters = [] }) => {
   console.log("Active Search Filters", activeFilters);
   // 2. loop through icons
-  iconsContainer.querySelectorAll("div[data-icon]").forEach(async (el) => {
+  iconsContainer.querySelectorAll("button[data-icon]").forEach(async (el) => {
     const iconName = el.getAttribute("data-icon");
     if (!icons.includes(iconName)) return; // early return for non approved icons
 
     const response = await fetch(`icons/${iconName}.svg`); // load icon.svg from /icons directory
     const svgText = await response.text(); // convert to text
     el.innerHTML = svgText; // set inner HTML as SVG content
-
-    const svg = el.querySelector("svg"); // get SVG element fron inside <div data-icon>
+    el.setAttribute("aria-label", iconName); // accessibility label
+    
+    const svg = el.querySelector("svg"); // get SVG element fron inside <button data-icon>
     if (!svg) return;
     svg.classList.add("icon"); // add class for general styling
 
