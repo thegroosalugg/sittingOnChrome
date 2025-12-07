@@ -1,4 +1,4 @@
-// ***DEALS WITH USER INPUT DATA
+// ***SAVE USER INTEGER VALUES FOR HISTORY ENTRY & DAY RANGE CAPS
 // get user input data from chrome storage generic function
 function getFromStorage(id, element) {
   chrome.storage.local.get(id, (data) => {
@@ -38,7 +38,7 @@ limitInput.addEventListener("change", () => {
   saveToStorage("historyLimit", limitInput);
 });
 
-// *** DYNAMICALLY LOAD SVG ICONS FROM DIRECTORY
+// *** DYNAMICALLY LOAD SVG ICONS FROM DIRECTORY & SAVE USER SELECTED SEARCH ENGINES TO HISTORY FILTER
 // get SVG icons container
 const iconsContainer = document.getElementById("search-icons");
 
@@ -58,7 +58,7 @@ chrome.storage.local.get("activeFilters", ({ activeFilters = [] }) => {
     const svgText = await response.text(); // convert to text
     el.innerHTML = svgText; // set inner HTML as SVG content
     el.setAttribute("aria-label", iconName); // accessibility label
-    
+
     const svg = el.querySelector("svg"); // get SVG element fron inside <button data-icon>
     if (!svg) return;
     svg.classList.add("icon"); // add class for general styling
@@ -79,4 +79,42 @@ chrome.storage.local.get("activeFilters", ({ activeFilters = [] }) => {
       chrome.storage.local.set({ activeFilters }); // save to storage
     });
   });
+});
+
+// *** SAVE CUSTOM USER URLS TO HISTORY FILTER
+const customUrlRow = document.getElementById("custom-url-row");
+const customUrlInput = customUrlRow.querySelector("input");
+const customUrlButton = customUrlRow.querySelector("button");
+
+let throttling = false; // prevent rapid clicks
+
+function throttle(toggle = false) {
+  throttling = toggle;
+  customUrlButton.disabled = toggle; // for UI
+}
+
+function handleSaveCustomUrl() {
+  if (throttling) return; // early exit
+  const value = customUrlInput.value.trim()?.toLowerCase(); // sanitize
+  if (!value) return; // no UI changes for empty values
+  throttle(true); // set throttle to true and disable button
+
+  chrome.storage.local.get("customUrls", ({ customUrls = [] }) => {
+    if (customUrls.includes(value)) {
+      throttle(); // set throttling off
+      return;
+    }
+    customUrls.unshift(value);
+    chrome.storage.local.set({ customUrls }, () => {
+      console.log(`Saved Custom Url ${customUrls}`);
+      customUrlInput.value = "";
+      setTimeout(() => {
+        throttle(); // set throttling off
+      }, 1000); // 1 click per second
+    });
+  });
+}
+
+customUrlButton.addEventListener("click", () => {
+  handleSaveCustomUrl();
 });
