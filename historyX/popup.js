@@ -118,6 +118,7 @@ function saveCustomUrl() {
       console.log(`Saved Custom Url ${customUrls}`);
       customUrlInput.value = ""; // reset <input> field
       renderRow(url); // add <html> to the DOM
+      if (customUrls.length === 1) removePlaceholder(); // remove placeholder if list was empty before
 
       setTimeout(() => {
         throttle(); // set throttling off
@@ -134,6 +135,7 @@ function deleteCustomUrl(url) {
       console.log(`Delete Url ${url}`);
       const li = customUrlList.querySelector(`[data-url="${CSS.escape(url)}"]`); // gets LI by saved dataset. CSS.escapes invalid URL class characters
       li.remove(); // remove from DOM
+      if (!updatedUrls.length) renderPlaceholder();
     });
   });
 }
@@ -159,9 +161,30 @@ function renderRow(url) {
   customUrlList.insertBefore(row, customUrlList.firstChild);
 }
 
+function renderPlaceholder() {
+  const li = document.createElement("li");
+  li.className = "inline-button-row";
+  li.id = "placeholder"
+  const p = document.createElement("p");
+  p.textContent = "No items added yet";
+  li.appendChild(p);
+  customUrlList.appendChild(li);
+}
+
+function removePlaceholder() {
+  const placeholder = customUrlList.querySelector("#placeholder");
+  if (!placeholder) return;
+  placeholder.remove();
+}
+
 function renderList() {
   chrome.storage.local.get("customUrls", ({ customUrls = [] }) => {
     customUrlList.innerHTML = "";
+
+    if (!customUrls.length) {
+      renderPlaceholder();
+      return;
+    }
 
     customUrls.forEach((url) => {
       renderRow(url);

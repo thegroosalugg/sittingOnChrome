@@ -13,8 +13,6 @@
   --stone-900: oklch(0.216 0.006 56.043);
   --stone-950: oklch(0.147 0.004 49.25);
   --lime-600:  oklch(0.648 0.2 131.684);
-  --lime-700:  oklch(0.532 0.157 131.589);
-  --rust-500: oklch(0.66199 0.18165 36.227);
   --rust-600: oklch(0.59307 0.14715 33.287);
 
   --white: var(--stone-50);
@@ -234,9 +232,12 @@ input {
     width: 90%;
     background: var(--white);
 
+    &:not(#placeholder) {
+      p { text-align: left; }
+    }
+
     p {
       color: var(--black);
-      text-align: start;
       padding: 0.25rem 0.5rem;
       max-width: 100%;
       text-wrap: nowrap;
