@@ -25,25 +25,18 @@ const searchEngines = {
 };
 
 // remove search engine search results from history
-function historyFilter() {
+function historyFilter(item) {
   chrome.storage.local.get(["activeFilters", "customUrls"], ({ activeFilters = [], customUrls = [] }) => {
-    if (!activeFilters.length && !customUrls.length) return;
+    const filtered = [...customUrls];
 
-    const filteredUrls = [...customUrls];
-
-    activeFilters.forEach((url) => {
-      const foundUrl = searchEngines[url];
-      if (foundUrl) filteredUrls.push(foundUrl);
+    activeFilters.forEach((key) => {
+      const url = searchEngines[key];
+      if (url) filtered.push(url);
     });
 
-    // Delete specific search history entries
-    chrome.history.search({ text: "", maxResults: 10 }, (results) => {
-      results.forEach((page) => {
-        if (filteredUrls.some((sub) => page.url.includes(sub))) {
-          chrome.history.deleteUrl({ url: page.url });
-        }
-      });
-    });
+    if (filtered.some((sub) => item.url.includes(sub))) {
+      chrome.history.deleteUrl({ url: item.url });
+    }
   });
 }
 
@@ -51,12 +44,13 @@ function historyFilter() {
 function capHistory() {
   chrome.storage.local.get("historyLimit", ({ historyLimit }) => {
     const limit = historyLimit || 0; // 0 = unlimited
+    if (limit <= 0) return;
 
-    chrome.history.search({ text: "", maxResults: 0 }, (allResults) => {
-      console.log(`History: ${allResults.length}, Limit: ${limit}`);
-      if (limit <= 0 || allResults.length <= limit) return;
+    chrome.history.search({ text: "", maxResults: 0, startTime: 0 }, (results) => {
+      console.log(`History: ${results.length}, Limit: ${limit}`);
+      if (results.length <= limit) return;
 
-      const toDelete = allResults.slice(limit);
+      const toDelete = results.slice(limit);
       toDelete.forEach((page) => {
         chrome.history.deleteUrl({ url: page.url });
         console.log(`Purging history: ${page.url}`);
@@ -65,8 +59,8 @@ function capHistory() {
   });
 }
 
-// Listen for any navigation
-chrome.webNavigation.onCommitted.addListener((details) => {
-  historyFilter();
+// Listen for any new history entry
+chrome.history.onVisited.addListener((item) => {
+  historyFilter(item);
   capHistory();
 });
