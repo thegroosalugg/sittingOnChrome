@@ -15,22 +15,21 @@
   <body>
     <h1>History X</h1>
     <div class="number-row box">
-      <label for="range">No. of days to retain history</label>
+      <label for="range">Keep history for (days)</label>
       <input type="number" id="range" min="0" value="0" />
       <div class="info-icon">i</div>
       <div class="tool-tip">
-        How many days to store history. <br />
-        Runs once on browser launch. <br />
-        0 = Unlimited
+        Deletes history older than this number of days. Runs at browser launch <br />
+        0 means no limit.
       </div>
     </div>
     <div class="number-row box">
-      <label for="limit"> Max History Entries </label>
+      <label for="limit">History entry limit</label>
       <input type="number" id="limit" min="0" value="0" />
       <div class="info-icon">i</div>
       <div class="tool-tip">
-        Cap maximum history entries. <br />
-        0 = Unlimited
+        Keeps history within this entry limit. Extra entries are removed. <br />
+        0 means no limit.
       </div>
     </div>
     <div class="history-filter-container box">
@@ -45,22 +44,18 @@
           <li>search.yahoo.com/search</li>
           <li>yandex.com/search</li>
         </ul>
-        <small>
-          Only the search page itself is removed; links you click from the search results
-          remain in your history.
-          <hr />
-          You can add custom filters, which will automatically remove matching history
-          entries. Filters can be specific or broad, for example:
-        </small>
+        Only the search page itself is removed; links you click from the search results
+        remain in your history.
+        <hr />
+        You can add custom filters, which will automatically remove matching history
+        entries. Filters can be specific or broad, for example:
         <ul>
           <li>store.example.com/products</li>
           <li>example.com</li>
           <li>example</li>
         </ul>
-        <small>
-          Be careful: very broad filters may remove any history entry containing that term.
-          Filters only apply to new history entries after they are set, not retroactively.
-        </small>
+        Be careful: very broad filters may remove any history entry containing that term.
+        Filters only apply to new history entries after they are set, not retroactively.
       </div>
       <div id="search-icons">
         <button data-icon="google"></button>
