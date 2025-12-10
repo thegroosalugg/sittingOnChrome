@@ -3,7 +3,7 @@
   "name": "History X",
   "description": "Auto history deletion & clutter removal.",
   "version": "1.0",
-  "permissions": ["storage", "history", "tabs", "webNavigation"],
+  "permissions": ["storage", "history"],
   "background": {
     "service_worker": "background.js"
   },
