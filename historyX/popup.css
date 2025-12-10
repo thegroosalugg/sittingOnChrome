@@ -13,7 +13,7 @@
   --stone-900: oklch(0.216 0.006 56.043);
   --stone-950: oklch(0.147 0.004 49.25);
   --lime-600:  oklch(0.648 0.2 131.684);
-  --rust-600: oklch(0.59307 0.14715 33.287);
+  --rust-600:  oklch(0.59307 0.14715 33.287);
 
   --white: var(--stone-50);
   --black: var(--stone-950);
@@ -28,14 +28,14 @@
   --rounded-2xl: 1rem;
   --rounded-3xl: 1.5rem;
   --rounded-4xl: 2rem;
-  --text-xs:   0.75rem;
-  --text-sm:   0.875rem;
-  --text-base: 1rem;
-  --text-lg:   1.125rem;
-  --text-xl:   1.25rem;
-  --text-2xl:  1.5rem;
-  --text-3xl:  1.875rem;
-  --text-4xl:  2.25rem;
+  --text-xs:     0.75rem;
+  --text-sm:     0.875rem;
+  --text-base:   1rem;
+  --text-lg:     1.125rem;
+  --text-xl:     1.25rem;
+  --text-2xl:    1.5rem;
+  --text-3xl:    1.875rem;
+  --text-4xl:    2.25rem;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -59,7 +59,7 @@ body {
   gap: 0.5rem;
   width: 300px;
   padding: 0.5rem 1rem;
-  background: linear-gradient(to right, var(--black), var(--stone-600));
+  background: linear-gradient(to right, var(--black), var(--gray));
   color: var(--white);
   line-height: 1.2;
   font-family: var(--font-major);
@@ -133,6 +133,7 @@ input {
   padding: 0.25rem;
   border-radius: var(--rounded-sm);
   background-color: var(--gray);
+  font-size: var(--text-sm);
 
   &:hover {
     opacity: 1;
@@ -157,11 +158,13 @@ input {
   > .tool-tip {
     ul {
       text-align: left;
-      font-size: var(--text-sm);
       margin: 0.25rem auto;
     }
 
-    hr { margin: 0.5rem 0; }
+    hr {
+      margin: 0.5rem 0;
+      width: 95%
+    }
   }
 }
 
